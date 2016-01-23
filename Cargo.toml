@@ -1,0 +1,22 @@
+[package]
+name = "robotfindskitten"
+version = "0.1.0"
+authors = ["Roman A. Taycher <rtaycher1987@gmail.com>"]
+
+[dependencies]
+rand = "0.3"
+rustc-serialize = "0.3"
+
+
+[target.i686-pc-windows-gnu.dependencies]
+wio = { git = "https://github.com/retep998/wio-rs.git"}
+[target.x86-pc-windows-gnu.dependencies]
+wio = { git = "https://github.com/retep998/wio-rs.git"}
+[target.x86_64-pc-windows-gnu.dependencies]
+wio = { git = "https://github.com/retep998/wio-rs.git"}
+[target.i686-pc-windows-msvc.dependencies]
+wio = { git = "https://github.com/retep998/wio-rs.git"}
+[target.x86-pc-windows-msvc.dependencies]
+wio = { git = "https://github.com/retep998/wio-rs.git"}
+[target.x86_64-pc-windows-msvc.dependencies]
+wio = { git = "https://github.com/retep998/wio-rs.git"}
