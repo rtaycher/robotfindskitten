@@ -33,8 +33,8 @@ struct Point {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 enum GItem {
     Robot,
-    Kitten(u8),
-    NonKittenItem(String, u8),
+    Kitten(u8, u16),
+    NonKittenItem(String, u8, u16),
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
@@ -117,10 +117,16 @@ impl Board {
 
         for _ in 0..10 {
             let new_location = b.new_location();
+            let color: u16 = b.rng.gen();
             b.board_locations.insert(new_location,
                                      NonKittenItem(phrases.pop().unwrap().to_string(),
-                                                   ascii_lower.pop().unwrap()));
+                                                   ascii_lower.pop().unwrap(),
+                                                   color));
         }
+
+        let new_location = b.new_location();
+        let color: u16 = b.rng.gen();
+        b.board_locations.insert(new_location, Kitten(ascii_lower.pop().unwrap(), color));
         b
     }
     fn new_location(&mut self) -> Point {
@@ -134,34 +140,6 @@ impl Board {
             };
         }
         p
-    }
-    fn print_board(&self) {
-        println!("{:}", VERSION_STRING);
-        println!("");
-        println!("===========================================================");
-        for y in 0..self.board_size.y {
-            for x in 0..self.board_size.x {
-                match self.board_locations.get(&Point { x: x, y: y }) {
-                    Some(&Kitten(ch)) => {
-                        io::stdout().write(&[ch]).expect("print should work");
-                    }
-                    Some(&NonKittenItem(_, ch)) => {
-                        io::stdout().write(&[ch]).expect("print should work");
-                    }                    
-                    _ => {
-                        io::stdout().write(&[b' ']).expect("print should work");
-                    }
-                }
-
-
-                if (Point { x: x, y: y }) == self.robot_location {
-                    io::stdout().write(b"#").expect("print should work");
-                }
-
-            }
-            io::stdout().write(b"\n").expect("print should work");
-        }
-
     }
 
     #[cfg(target_os = "windows")]
@@ -191,11 +169,11 @@ impl Board {
         for y in 0..max_y - 1 {
             for x in 0..max_x - 1 {
                 match self.board_locations.get(&Point { x: x, y: y }) {
-                    Some(&Kitten(ch)) => {
-                        buf[(y * (3 + max_x) + x) as usize] = CharInfo::new(ch as u16, 10u16);
+                    Some(&Kitten(ch, color)) => {
+                        buf[((3 + y) * max_x + x) as usize] = CharInfo::new(ch as u16, color);
                     }
-                    Some(&NonKittenItem(_, ch)) => {
-                        buf[(y * (3 + max_x) + x) as usize] = CharInfo::new(ch as u16, 10u16);
+                    Some(&NonKittenItem(_, ch, color)) => {
+                        buf[((3 + y) * max_x + x) as usize] = CharInfo::new(ch as u16, color);
                     }                    
                     _ => {
                         // buf[y*x+x] = CharInfo::new(' ', 0u16);
@@ -204,7 +182,7 @@ impl Board {
 
 
                 if (Point { x: x, y: y }) == self.robot_location {
-                    buf[(y * (3 + max_x) + x) as usize] = CharInfo::new(b'#' as u16, 10u16);
+                    buf[((3 + y) * max_x + x) as usize] = CharInfo::new(b'#' as u16, 10u16);
                 }
 
             }
@@ -214,6 +192,25 @@ impl Board {
         ctx.frontbuf.set_active().unwrap();
     }
 
+
+    fn draw_text(&self, ctx: &mut TextGraphicsContext, text: &str) {
+        let info = ctx.backbuf.info().unwrap();
+        let (max_x, max_y) = info.size();
+        let max_x_i = max_x as usize;
+        let mut buf: Vec<_> = (0..(max_x * max_y))
+                                  .map(|_| CharInfo::new(0u16, 0u16))
+                                  .collect();
+
+        for (y, line) in text.lines().enumerate() {
+            for (x, ch) in line.chars().enumerate() {
+                buf[((max_x as usize) * y + x) as usize] = CharInfo::new(ch as u16, 10u16);
+            }
+        }
+        ctx.backbuf.write_output(&buf, (max_x, max_y), (0, 0)).unwrap();
+        swap(&mut ctx.backbuf, &mut ctx.frontbuf);
+        ctx.frontbuf.set_active().unwrap();
+
+    }
     fn is_out_of_bounds(&self, p: Point) -> bool {
         p.x < 0 || p.y < 0 || p.x >= self.board_size.x || p.y >= self.board_size.y
     }
@@ -234,12 +231,12 @@ impl Board {
             return;
         }
         match self.board_locations.get(&new_robot_location) {
-            Some(&Kitten(ch)) => {
+            Some(&Kitten(ch, _)) => {
                 io::stdout().write(&[ch]).expect("print should work");
                 self.message = "Game won".to_string();
                 self.game_over = true;
             }
-            Some(&NonKittenItem(ref s, _)) => {
+            Some(&NonKittenItem(ref s, _, _)) => {
                 self.message = s.clone();
             }
             _ => self.robot_location = new_robot_location,
@@ -252,39 +249,43 @@ fn get_input(stdin: &ScreenBuffer) -> Vec<UsefulInput> {
     let mut res: Vec<UsefulInput> = Vec::new();
     if stdin.available_input().unwrap() > 0 {
         let input: Vec<_> = stdin.read_input().unwrap();
-        let mut last_input_code = 0;
-        let mut input = input.iter()
-                             .flat_map(|y| {
-                                 match *y {
-                                     Input::Key(z) => Some(z.wVirtualKeyCode),
-                                     _ => None,
-                                 }
-                             })
-                             .collect::<Vec<_>>();
-        input.dedup();
-        for i in input {
-            if i == last_input_code {
-                // skip duplicates
-                last_input_code = 0;
-                continue;
-            }
-            if i == 0x25 {
-                res.push(Left);
-            }
-            if i == 0x26 {
-                res.push(Up);
-            }
-            if i == 0x27 {
-                res.push(Right);
-            }
-            if i == 0x28 {
-                res.push(Down);
-            }
-            if i == 0x1B {
-                res.push(Escape);
-            }
+        // let mut last_input_code = 0;
+        let input = input.iter()
+                         .flat_map(|y| {
+                             match *y {
+                                 Input::Key(z) => Some(z.wVirtualKeyCode),
+                                 _ => None,
+                             }
+                         })
+                         .collect::<Vec<_>>();
+        // input.dedup();
+        if input.len() == 0 {
+            return res;
         }
+        let i = input[0];
+        // if i == last_input_code {
+        //     // skip duplicates
+        //     last_input_code = 0;
+        //     continue;
+        // }
+        if i == 0x25 {
+            res.push(Left);
+        }
+        if i == 0x26 {
+            res.push(Up);
+        }
+        if i == 0x27 {
+            res.push(Right);
+        }
+        if i == 0x28 {
+            res.push(Down);
+        }
+        if i == 0x1B {
+            res.push(Escape);
+        }
+        // }
     }
+
     res
 }
 
@@ -292,8 +293,10 @@ fn get_input(stdin: &ScreenBuffer) -> Vec<UsefulInput> {
 fn main() {
     let phrases: Vec<&str> = NKI_FILE_CONTENTS.lines().collect();
     let mut b = Board::new(phrases);
-    // draw_instruction_string();
+
+
     let mut ctx = TextGraphicsContext::new();
+    b.draw_text(&mut ctx, INSTRUCTION_STRING);
     loop {
 
         let stdin = ScreenBuffer::from_stdin().unwrap();
@@ -311,7 +314,7 @@ fn main() {
             break;
         }
 
-        sleep(Duration::new(0, 300));
+        sleep(Duration::new(0, 900));
 
     }
 }
