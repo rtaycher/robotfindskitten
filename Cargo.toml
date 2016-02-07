@@ -20,3 +20,9 @@ wio = { git = "https://github.com/retep998/wio-rs.git"}
 wio = { git = "https://github.com/retep998/wio-rs.git"}
 [target.x86_64-pc-windows-msvc.dependencies]
 wio = { git = "https://github.com/retep998/wio-rs.git"}
+
+
+[target.i686-unknown-linux-gnu.dependencies]
+ncurses = "*"
+[target.x86_64-unknown-linux-gnu.dependencies]
+ncurses = "*"
