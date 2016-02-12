@@ -15,6 +15,13 @@ use common::UsefulInput;
 use common::UsefulInput::*;
 pub use common::Board;
 
+#[cfg(target_os = "linux")]
+extern crate ncurses;
+#[cfg(target_os = "linux")]
+pub mod linux_console_gui;
+#[cfg(target_os = "linux")]
+use linux_console_gui::{TextGraphicsContext, get_input, draw_board, draw_text};
+
 #[cfg(target_os = "windows")]
 extern crate wio;
 #[cfg(target_os = "windows")]
@@ -39,9 +46,10 @@ static ASCII_LOWERCASE_MAP: &'static [u8] = &[b' ', b'!', b'"', b'#', b'$', b'%'
                                               b'x', b'y', b'z', b'{', b'|', b'}', b'~'];
 
 impl Board {
-    fn new(mut phrases: Vec<&str>) -> Board {
+    fn new(mut phrases: Vec<&str>, ctx: &TextGraphicsContext) -> Board {
+        let (x, y) = ctx.output_size();
         let mut b = Board {
-            board_size: Point { x: 80, y: 30 },
+            board_size: Point { x: x, y:y-3 },
             board_locations: HashMap::new(),
             rng: thread_rng(),
             message: "".to_string(),
@@ -108,7 +116,7 @@ impl Board {
         draw_board(self, ctx);
         sleep(Duration::new(1, 0));
 
-        self.message = format!("{}    {}    ", prefix, HEART_CH);
+        self.message = format!("{}   {}    ", prefix, HEART_CH);
         draw_board(self, ctx);
 
         sleep(Duration::new(3, 0));
@@ -153,11 +161,10 @@ impl Board {
 
 fn main() {
     let phrases: Vec<&str> = NKI_FILE_CONTENTS.lines().collect();
-    let mut b = Board::new(phrases);
-
-
     let mut ctx = TextGraphicsContext::new();
-    
+    let mut b = Board::new(phrases, &ctx);
+
+
     draw_text(&mut ctx, INSTRUCTION_STRING);
     loop {
         if let Some(f_inp) = get_input(&ctx).first() {
