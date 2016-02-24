@@ -1,5 +1,3 @@
-#![feature(convert)]
-
 use std::thread::sleep;
 use std::time::Duration;
 use std::collections::HashMap;
@@ -14,6 +12,7 @@ use common::GItem::*;
 use common::UsefulInput;
 use common::UsefulInput::*;
 pub use common::Board;
+
 
 #[cfg(target_os = "linux")]
 extern crate ncurses;
@@ -57,6 +56,7 @@ impl Board {
             game_over: false,
             kitten_color: 0,
         };
+        
         let new_location = b.new_location();
         b.robot_location = new_location;
         let mut ascii_lower: Vec<u8> = ASCII_LOWERCASE_MAP.to_vec();
