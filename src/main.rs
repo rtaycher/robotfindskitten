@@ -56,7 +56,7 @@ impl Board {
     fn new(mut phrases: Vec<&str>, ctx: &TextGraphicsContext) -> Board {
         let (x, y) = ctx.output_size();
         let mut b = Board {
-            board_size: Point { x: x, y: y - 3},
+            board_size: Point { x: x, y: y - 3 },
             board_locations: HashMap::new(),
             rng: thread_rng(),
             message: "".to_string(),

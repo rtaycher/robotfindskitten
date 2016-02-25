@@ -99,7 +99,7 @@ pub fn draw_board(b: &Board, ctx: &mut TextGraphicsContext) {
                 }
                 Some(&NonKittenItem(_, ch, color)) => {
                     buf[((3 + y) * max_x + x) as usize] = CharInfo::new(ch as u16, color);
-                }                    
+                }
                 _ => {}
             }
 

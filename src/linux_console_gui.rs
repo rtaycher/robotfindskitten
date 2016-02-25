@@ -25,6 +25,9 @@ impl TextGraphicsContext {
         curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
         cbreak();
         keypad(stdscr, true);
+        if has_colors() {
+            start_color();
+        }
         TextGraphicsContext { dummy: 0 }
     }
     pub fn output_size(&self) -> (i16, i16) {
@@ -52,7 +55,7 @@ pub fn get_input(ctx: &TextGraphicsContext) -> Vec<UsefulInput> {
             return res;
         }
         res.push(match ch {
-            0x1B => Escape, 
+            0x1B => Escape,
             KEY_LEFT => Left,
             KEY_UP => Up,
             KEY_RIGHT => Right,
@@ -96,7 +99,7 @@ pub fn draw_board(b: &Board, ctx: &mut TextGraphicsContext) {
                 }
                 Some(&NonKittenItem(_, ch, color)) => {
                     grid_buf[(y * max_x + x) as usize] = ch;
-                }                    
+                }
                 _ => {}
             }
 

@@ -33,29 +33,29 @@ pub struct Board {
 }
 
 pub static VERSION_STRING: &'static str = "robotfindskitten v0.9";
-pub static INSTRUCTION_STRING: &'static str = "robotfindskitten v0.9 
+pub static INSTRUCTION_STRING: &'static str = "robotfindskitten v0.9
 This version was written by \
                                                Roman Taycher (C) 2015 <rtaycher1987@gmail.com>
 
 \
                                                Written originally for the Nerth Pork \
-                                               robotfindskitten contest 
+                                               robotfindskitten contest
 by the illustrious \
                                                Leonard Richardson (C) 1997, 2000
 
 In this game, \
-                                               you are robot (#). 
-Your job is to find kitten. 
+                                               you are robot (#).
+Your job is to find kitten.
 \
                                                This task is complicated by the existence of \
-                                               various things which are not kitten. 
+                                               various things which are not kitten.
 Robot must \
                                                touch items to determine if they are kitten or \
-                                               not. 
-The game ends when robotfindskitten. 
+                                               not.
+The game ends when robotfindskitten.
 \
                                                Alternatively, you may end the game by hitting the \
-                                               Esc key. 
+                                               Esc key.
 See the documentation for more \
-                                               information. 
+                                               information.
 Press any key to start.";
