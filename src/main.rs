@@ -1,6 +1,13 @@
+#[macro_use]
+extern crate log;
+
+extern crate log4rs;
+use std::io::prelude::*;
+use std::io;
 use std::thread::sleep;
 use std::time::Duration;
 use std::collections::HashMap;
+use std::fs::File;
 
 extern crate rand;
 use rand::{thread_rng, Rng};
@@ -29,7 +36,8 @@ pub mod win_console_gui;
 use win_console_gui::{TextGraphicsContext, get_input, draw_board, draw_text};
 
 static HEART_CH: char = '♥';
-static NKI_FILE_CONTENTS: &'static str = include_str!("vanilla.nki");
+static VANILLA_NKI_CONTENTS: &'static str = include_str!("vanilla.nki");
+static DEFAULT_LOG_TOML: &'static str = include_str!("log.toml");
 
 static ASCII_LOWERCASE_MAP: &'static [u8] = &[b' ', b'!', b'"', b'#', b'$', b'%', b'&', b'\'',
                                               b'(', b')', b'*', b'+', b',', b'-', b'.', b'/',
@@ -48,7 +56,7 @@ impl Board {
     fn new(mut phrases: Vec<&str>, ctx: &TextGraphicsContext) -> Board {
         let (x, y) = ctx.output_size();
         let mut b = Board {
-            board_size: Point { x: x, y:y-3 },
+            board_size: Point { x: x, y: y - 3},
             board_locations: HashMap::new(),
             rng: thread_rng(),
             message: "".to_string(),
@@ -56,7 +64,7 @@ impl Board {
             game_over: false,
             kitten_color: 0,
         };
-        
+
         let new_location = b.new_location();
         b.robot_location = new_location;
         let mut ascii_lower: Vec<u8> = ASCII_LOWERCASE_MAP.to_vec();
@@ -159,8 +167,30 @@ impl Board {
     }
 }
 
+fn make_default_file(filepath: &str, default_file_contents: &str) -> std::io::Result<String> {
+    let mut s = String::new();
+
+    match File::open(filepath) {
+        Ok(mut file) => {
+            try!(file.read_to_string(&mut s));
+            Ok(s)
+        }
+        Err(_) => {
+            let mut f = try!(File::create(filepath));
+            try!(f.write_all(default_file_contents.as_bytes()));
+            try!(f.sync_data());
+            Ok(default_file_contents.to_string())
+        }
+    }
+}
+
 fn main() {
-    let phrases: Vec<&str> = NKI_FILE_CONTENTS.lines().collect();
+    make_default_file("log.toml", DEFAULT_LOG_TOML).unwrap();
+    log4rs::init_file("log.toml", Default::default()).unwrap();
+
+    let nki = make_default_file("vanilla.nki", VANILLA_NKI_CONTENTS).unwrap();
+
+    let phrases: Vec<&str> = nki.lines().collect();
     let mut ctx = TextGraphicsContext::new();
     let mut b = Board::new(phrases, &ctx);
 
@@ -169,6 +199,7 @@ fn main() {
     loop {
         if let Some(f_inp) = get_input(&ctx).first() {
             if *f_inp == Escape {
+                debug!("Exiting!");
                 return;
             } else {
                 break;
@@ -179,6 +210,7 @@ fn main() {
     }
 
     loop {
+        debug!("before board draw");
         draw_board(&b, &mut ctx);
         for inp in get_input(&ctx) {
             if b.game_over {
@@ -191,6 +223,7 @@ fn main() {
                 continue;
             }
             b.attempt_move(&mut ctx, inp);
+            debug!("before board draw");
             draw_board(&b, &mut ctx);
         }
 
@@ -200,4 +233,3 @@ fn main() {
         sleep(Duration::new(0, 22_000_000));
     }
 }
-    

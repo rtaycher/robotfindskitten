@@ -1,12 +1,13 @@
 [package]
 name = "robotfindskitten"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Roman A. Taycher <rtaycher1987@gmail.com>"]
 
 [dependencies]
 rand = "0.3"
 rustc-serialize = "0.3"
-
+log = "0.3"
+log4rs = "0.3"
 
 [target.i686-pc-windows-gnu.dependencies]
 wio = { git = "https://github.com/retep998/wio-rs.git"}
@@ -22,8 +23,9 @@ wio = { git = "https://github.com/retep998/wio-rs.git"}
 wio = { git = "https://github.com/retep998/wio-rs.git"}
 
 [target.i686-unknown-linux-gnu.dependencies]
-ncurses = "*"
+ncurses = "5"
 [target.x86-unknown-linux-gnu.dependencies]
-ncurses = "*"
+ncurses = "5"
 [target.x86_64-unknown-linux-gnu.dependencies]
-ncurses = "*"
+ncurses = "5"
+

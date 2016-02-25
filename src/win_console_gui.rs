@@ -39,7 +39,7 @@ pub fn get_input(ctx: &TextGraphicsContext) -> Vec<UsefulInput> {
     let mut res: Vec<UsefulInput> = Vec::new();
     if ctx.stdin.available_input().unwrap() > 0 {
         let input: Vec<_> = ctx.stdin.read_input().unwrap();
-        
+
         let input = input.iter()
                          .flat_map(|y| {
                              match *y {

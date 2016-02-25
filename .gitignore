@@ -1,0 +1,8 @@
+.vscode
+*.log
+Cargo.lock
+target/*
+target-install/*
+*.rs.bk
+log.toml
+*.nki
