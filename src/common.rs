@@ -34,30 +34,34 @@ pub struct Board {
 
 pub static HEART_CH: char = '♥';
 
-pub static VERSION_STRING: &'static str = "robotfindskitten v0.9";
-pub static INSTRUCTION_STRING: &'static str = "robotfindskitten v0.9
-This version was written by \
-                                               Roman Taycher (C) 2015 <rtaycher1987@gmail.com>
+pub static VERSION_STRING: &'static str = concat!("robotfindskitten ", crate_version!());
+pub static INSTRUCTION_STRING: &'static str = concat!("robotfindskitten ",
+                                                      crate_version!(),
+                                                      "
+This version was written by Roman \
+                                                       Taycher (C) 2015 <rtaycher1987@gmail.com>
 
 \
-                                               Written originally for the Nerth Pork \
-                                               robotfindskitten contest
-by the illustrious \
-                                               Leonard Richardson (C) 1997, 2000
+                                                       Written originally for the Nerth Pork \
+                                                       robotfindskitten contest
+by the \
+                                                       illustrious Leonard Richardson (C) 1997, \
+                                                       2000
 
-In this game, \
-                                               you are robot (#).
-Your job is to find kitten.
+In this game, you are robot (#).
 \
-                                               This task is complicated by the existence of \
-                                               various things which are not kitten.
+                                                       Your job is to find kitten.
+This task is \
+                                                       complicated by the existence of various \
+                                                       things which are not kitten.
 Robot must \
-                                               touch items to determine if they are kitten or \
-                                               not.
-The game ends when robotfindskitten.
+                                                       touch items to determine if they are \
+                                                       kitten or not.
+The game ends when \
+                                                       robotfindskitten.
+Alternatively, you may \
+                                                       end the game by hitting the Esc key.
+See \
+                                                       the documentation for more information.
 \
-                                               Alternatively, you may end the game by hitting the \
-                                               Esc key.
-See the documentation for more \
-                                               information.
-Press any key to start.";
+                                                       Press any key to start.");

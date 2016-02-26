@@ -12,7 +12,31 @@ extern crate wio;
 use wio::console::{Input, ScreenBuffer, CharInfo};
 
 static HEART_CH: char = '♥';
+
+// see https://msdn.microsoft.com/en-us/library/windows/desktop/ms682013%28v=vs.85%29.aspx for windows console colors
 static FOREGROUND_RED_WINDOWS: u16 = 4;
+// http://blog.tedd.no/2015/08/02/better-text-console-for-c/
+//        Black = 0x0000,
+//        DarkBlue = 0x0001,
+//        DarkGreen = 0x0002,
+//        DarkRed = 0x0004,
+//        Gray = DarkBlue | DarkGreen | DarkRed,
+//        DarkYellow = DarkRed | DarkGreen,
+//        DarkPurple = DarkRed | DarkBlue,
+//        DarkCyan = DarkGreen | DarkBlue,
+//        LightBlue = DarkBlue | HighIntensity,
+//        LightGreen = DarkGreen | HighIntensity,
+//        LightRed = DarkRed | HighIntensity,
+//        LightWhite = Gray | HighIntensity,
+//        LightYellow = DarkYellow | HighIntensity,
+//        LightPurple = DarkPurple | HighIntensity,
+//        LightCyan = DarkCyan | HighIntensity
+
+static FOREGROUND_DARK_BLUE: u16 = 1;
+static FOREGROUND_DARK_GREEN: u16 = 2;
+static FOREGROUND_DARK_RED: u16 = 4;
+static FOREGROUND_GREY: u16 = FOREGROUND_DARK_BLUE | FOREGROUND_DARK_GREEN | FOREGROUND_DARK_RED;
+
 
 #[cfg(target_os = "windows")]
 pub struct TextGraphicsContext {

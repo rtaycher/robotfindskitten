@@ -8,6 +8,7 @@ rand = "0.3"
 rustc-serialize = "0.3"
 log = "0.3"
 log4rs = "0.3"
+clap = "*"
 
 [target.i686-pc-windows-gnu.dependencies]
 wio = { git = "https://github.com/retep998/wio-rs.git"}

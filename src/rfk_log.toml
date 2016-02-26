@@ -1,8 +1,9 @@
 [appender.tmp_file_log]
 kind = "file"
 path = "robotfindskitten.log"
-#pattern = "%d{%Y-%m-%dT%H:%M:%S.%f%z} [%t] %l {%T}: %m"
-pattern = "[%t] %m" 
+pattern = "%d{%Y-%m-%d %H:%M:%S} [%t] %l: %m"
+append = false
+
 
 [root]
 level = "debug"
