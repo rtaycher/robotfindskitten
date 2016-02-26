@@ -1,10 +1,10 @@
 #robotfindskitten implementation in rust (see http://www.robotfindskitten.org/)
 
-##### Works in Windows and Linux
+Works in Windows and Linux
 
-##### (heart does not display properly for some reason),
+(heart does not display properly on Linux for some reason (possibly a curses issue)),
 
-##### will probably work on OS X but I can't test it.
+will probably work on OS X but I can't test it.
 
 robotfindskitten is a cool little game-like zen simulation.
 
