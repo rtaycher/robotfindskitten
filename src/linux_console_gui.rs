@@ -1,9 +1,10 @@
+use std::str;
 use common::Point;
 use common::GItem::*;
 use common::UsefulInput;
 use common::UsefulInput::*;
 use common::Board;
-
+use common::HEART_CH;
 use common::VERSION_STRING;
 
 extern crate ncurses;
@@ -25,10 +26,32 @@ impl TextGraphicsContext {
         curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
         cbreak();
         keypad(stdscr, true);
+        setlocale(LcCategory::all, "");
         if has_colors() {
             start_color();
+
+            init_pair(1, COLOR_BLACK, COLOR_BLACK);
+            init_pair(2, COLOR_BLUE, COLOR_BLACK);
+            init_pair(3, COLOR_GREEN, COLOR_BLACK);
+            init_pair(4, COLOR_CYAN, COLOR_BLACK);
+            init_pair(5, COLOR_YELLOW, COLOR_BLACK);
+            init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+            init_pair(7, COLOR_GREEN, COLOR_BLACK);
+            init_pair(8, COLOR_WHITE, COLOR_BLACK);
+            init_pair(9, COLOR_WHITE, COLOR_BLACK);
+            init_pair(10, COLOR_BLUE, COLOR_BLACK);
+            init_pair(11, COLOR_GREEN, COLOR_BLACK);
+            init_pair(12, COLOR_CYAN, COLOR_BLACK);
+            init_pair(13, COLOR_RED, COLOR_BLACK);
+            init_pair(14, COLOR_MAGENTA, COLOR_BLACK);
+            init_pair(15, COLOR_YELLOW, COLOR_BLACK);
+            init_pair(16, COLOR_WHITE, COLOR_BLACK);
+
+            init_pair(17, COLOR_WHITE, COLOR_BLACK);
         }
+
         TextGraphicsContext { dummy: 0 }
+
     }
     pub fn output_size(&self) -> (i16, i16) {
         let mut max_x = 0;
@@ -52,7 +75,7 @@ pub fn get_input(ctx: &TextGraphicsContext) -> Vec<UsefulInput> {
         let ch = getch();
 
         if ch == ERR {
-            return res;
+            break;
         }
         res.push(match ch {
             0x1B => Escape,
@@ -76,44 +99,56 @@ pub fn draw_board(b: &Board, ctx: &mut TextGraphicsContext) {
     let mut buf = String::new();
     buf.push_str(VERSION_STRING);
     buf.push_str("\n");
-    buf.push_str(&b.message);
     buf.push_str("\n");
-
-    // if ch == HEART_CH {
-    //     buf[(max_x as usize + i) as usize] = CharInfo::new(ch as u16, FOREGROUND_RED_linux);
-    // } else if b.game_over && (!(ch == ' ' || ch == '#')) {
-    //     buf[(max_x as usize + i) as usize] = CharInfo::new(ch as u16, b.kitten_color);
-    // } else {
-    // buf[(max_x as usize + i) as usize] = CharInfo::new(ch as u16, 0x0fu16);
 
     buf.push_str(&(0..max_x - 1).map(|_| "-").collect::<String>());
     buf.push_str("\n");
 
-    let mut grid_buf: Vec<u8> = (0..(max_x * (max_y - 3))).map(|_| b' ').collect();
+    printw(&*buf);
+
+    if b.message.contains(HEART_CH) && has_colors() {
+        attroff(COLOR_PAIR(13));
+        mvprintw(1, 0, &b.message);
+        attroff(COLOR_PAIR(13));
+    } else {
+        mvprintw(1, 0, &b.message);
+    }
 
     for y in 0..max_y - 3 {
         for x in 0..max_x - 1 {
             match b.board_locations.get(&Point { x: x, y: y }) {
                 Some(&Kitten(ch, color)) => {
-                    grid_buf[(y * max_x + x) as usize] = ch;
+                    if has_colors() {
+                        attron(COLOR_PAIR(color as i16 + 1));
+                    }
+                    mvprintw((3 + y).into(), x.into(), str::from_utf8(&[ch]).unwrap());
+                    if has_colors() {
+                        attroff(COLOR_PAIR(color as i16 + 1));
+                    }
                 }
                 Some(&NonKittenItem(_, ch, color)) => {
-                    grid_buf[(y * max_x + x) as usize] = ch;
+                    if has_colors() {
+                        attron(COLOR_PAIR(color as i16 + 1));
+                    }
+                    mvprintw((3 + y).into(), x.into(), str::from_utf8(&[ch]).unwrap());
+                    if has_colors() {
+                        attroff(COLOR_PAIR(color as i16 + 1));
+                    }
                 }
                 _ => {}
             }
 
             if (Point { x: x, y: y }) == b.robot_location {
-                debug!("robot ");
-                grid_buf[(y * max_x + x) as usize] = b'#';
+                if has_colors() {
+                    attron(COLOR_PAIR(17));
+                }
+                mvprintw((3 + y).into(), x.into(), "#");
+                if has_colors() {
+                    attroff(COLOR_PAIR(17));
+                }
             }
         }
     }
-
-
-    buf.push_str(&String::from_utf8(grid_buf).expect("should be utf-8"));
-    printw(&*buf);
-
     refresh();
 }
 

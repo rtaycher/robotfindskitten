@@ -3,7 +3,6 @@ extern crate log;
 
 extern crate log4rs;
 use std::io::prelude::*;
-use std::io;
 use std::thread::sleep;
 use std::time::Duration;
 use std::collections::HashMap;

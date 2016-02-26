@@ -32,6 +32,8 @@ pub struct Board {
     pub kitten_color: u16,
 }
 
+pub static HEART_CH: char = '♥';
+
 pub static VERSION_STRING: &'static str = "robotfindskitten v0.9";
 pub static INSTRUCTION_STRING: &'static str = "robotfindskitten v0.9
 This version was written by \
