@@ -10,6 +10,7 @@ use common::VERSION_STRING;
 extern crate ncurses;
 
 use ncurses::*;
+use rand::{Rng, ThreadRng};
 
 #[cfg(target_os = "linux")]
 #[allow(dead_code)]
@@ -26,7 +27,8 @@ impl TextGraphicsContext {
         curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
         cbreak();
         keypad(stdscr, true);
-        setlocale(LcCategory::all, "");
+
+        // see http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/color.html
         if has_colors() {
             start_color();
 
@@ -58,6 +60,9 @@ impl TextGraphicsContext {
         let mut max_y = 0;
         getmaxyx(stdscr, &mut max_y, &mut max_x);
         (max_x as i16, max_y as i16)
+    }
+    pub fn get_rand_non_black_color(&self, rng: &mut ThreadRng) -> u16 {
+        rng.gen_range(1, 7)
     }
 }
 

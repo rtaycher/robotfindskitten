@@ -56,6 +56,9 @@ impl TextGraphicsContext {
     pub fn output_size(&self) -> (i16, i16) {
         self.backbuf.info().unwrap().size()
     }
+    pub fn get_rand_non_black_color(&self, rng: &mut ThreadRng) -> u16 {
+        rng.gen_range(1, 0xf)
+    }
 }
 
 #[cfg(target_os = "windows")]

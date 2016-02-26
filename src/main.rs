@@ -92,7 +92,7 @@ impl Board {
                &phrases[0..5]);
         for _ in 0..number_of_nkis {
             let new_location = b.new_location();
-            let color: u16 = b.rng.gen_range(0, 0xf);
+            let color: u16 = ctx.get_rand_non_black_color(&mut b.rng);
             b.board_locations.insert(new_location,
                                      NonKittenItem(phrases.pop().unwrap().into(),
                                                    ascii_lower.pop().unwrap(),
@@ -100,7 +100,7 @@ impl Board {
         }
 
         let new_location = b.new_location();
-        let color: u16 = b.rng.gen_range(0, 0xf);
+        let color: u16 = ctx.get_rand_non_black_color(&mut b.rng);
 
         b.kitten_color = color;
         b.board_locations.insert(new_location, Kitten(ascii_lower.pop().unwrap(), color));
@@ -218,7 +218,7 @@ fn main() {
                          .help("Sets a custom nki file to use for the simulation.
                                 \
                                 vanilla.nki/original.nki/fortunes.nki can be used even if not \
-                                present in the filesystem 
+                                present in the filesystem
                                 \
                                 (extracted on use).
                                 Feel free \
@@ -267,7 +267,7 @@ fn main() {
                 break;
             }
         } else {
-            sleep(Duration::new(2, 0));
+            sleep(Duration::new(0, 500_000_000));
         }
     }
 
