@@ -47,7 +47,7 @@ static FORTUNES_NKI_CONTENTS: &'static str = include_str!("fortunes.nki");
 
 static DEFAULT_LOG_TOML: &'static str = include_str!("rfk_log.toml");
 
-static ASCII_LOWERCASE_MAP: &'static [u8] = &[b' ', b'!', b'"', b'#', b'$', b'%', b'&', b'\'',
+static ASCII_LOWERCASE_MAP: &'static [u8] = &[b' ', b'!', b'"', b'$', b'%', b'&', b'\'',
                                               b'(', b')', b'*', b'+', b',', b'-', b'.', b'/',
                                               b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7',
                                               b'8', b'9', b':', b';', b'<', b'=', b'>', b'?',
