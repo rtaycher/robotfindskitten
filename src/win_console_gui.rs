@@ -15,7 +15,6 @@ use wio::console::{Input, ScreenBuffer, CharInfo};
 static HEART_CH: char = '♥';
 
 // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms682013%28v=vs.85%29.aspx for windows console colors
-static FOREGROUND_RED_WINDOWS: u16 = 4;
 // http://blog.tedd.no/2015/08/02/better-text-console-for-c/
 //        Black = 0x0000,
 //        DarkBlue = 0x0001,
@@ -106,9 +105,11 @@ pub fn draw_board(b: &Board, ctx: &mut TextGraphicsContext) {
 
     for (i, ch) in b.message.chars().enumerate() {
         if ch == HEART_CH {
-            buf[(max_x as usize + i) as usize] = CharInfo::new(ch as u16, FOREGROUND_RED_WINDOWS);
+            buf[(max_x as usize + i) as usize] = CharInfo::new(ch as u16, FOREGROUND_DARK_RED);
         } else if b.game_over && (!(ch == ' ' || ch == '#')) {
             buf[(max_x as usize + i) as usize] = CharInfo::new(ch as u16, b.kitten_color);
+        } else if b.game_over && ch == '#' {
+            buf[(max_x as usize + i) as usize] = CharInfo::new(ch as u16, FOREGROUND_GREY);
         } else {
             buf[(max_x as usize + i) as usize] = CharInfo::new(ch as u16, 0x0fu16);
         }
@@ -133,7 +134,7 @@ pub fn draw_board(b: &Board, ctx: &mut TextGraphicsContext) {
 
 
             if (Point { x: x, y: y }) == b.robot_location {
-                buf[((3 + y) * max_x + x) as usize] = CharInfo::new(b'#' as u16, 0x0fu16);
+                buf[((3 + y) * max_x + x) as usize] = CharInfo::new(b'#' as u16, FOREGROUND_GREY);
             }
 
         }
