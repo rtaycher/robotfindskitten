@@ -10,18 +10,19 @@ log = "0.3"
 log4rs = "0.3"
 clap = "*"
 
+#newest rev breaks compile
 [target.i686-pc-windows-gnu.dependencies]
-wio = { git = "https://github.com/retep998/wio-rs.git"}
+wio = { git = "https://github.com/retep998/wio-rs.git", rev="5a805212faf77b8dd405e06487ddd58f76930ea1" }
 [target.x86-pc-windows-gnu.dependencies]
-wio = { git = "https://github.com/retep998/wio-rs.git"}
+wio = { git = "https://github.com/retep998/wio-rs.git", rev="5a805212faf77b8dd405e06487ddd58f76930ea1" }
 [target.x86_64-pc-windows-gnu.dependencies]
-wio = { git = "https://github.com/retep998/wio-rs.git"}
+wio = { git = "https://github.com/retep998/wio-rs.git", rev="5a805212faf77b8dd405e06487ddd58f76930ea1" }
 [target.i686-pc-windows-msvc.dependencies]
-wio = { git = "https://github.com/retep998/wio-rs.git"}
+wio = { git = "https://github.com/retep998/wio-rs.git", rev="5a805212faf77b8dd405e06487ddd58f76930ea1" }
 [target.x86-pc-windows-msvc.dependencies]
-wio = { git = "https://github.com/retep998/wio-rs.git"}
+wio = { git = "https://github.com/retep998/wio-rs.git", rev="5a805212faf77b8dd405e06487ddd58f76930ea1" }
 [target.x86_64-pc-windows-msvc.dependencies]
-wio = { git = "https://github.com/retep998/wio-rs.git"}
+wio = { git = "https://github.com/retep998/wio-rs.git", rev="5a805212faf77b8dd405e06487ddd58f76930ea1" }
 
 [target.i686-unknown-linux-gnu.dependencies]
 ncurses = "5"
