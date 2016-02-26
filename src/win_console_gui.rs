@@ -8,6 +8,7 @@ use common::Board;
 
 use common::VERSION_STRING;
 
+use rand::{Rng, ThreadRng};
 extern crate wio;
 use wio::console::{Input, ScreenBuffer, CharInfo};
 
@@ -32,10 +33,10 @@ static FOREGROUND_RED_WINDOWS: u16 = 4;
 //        LightPurple = DarkPurple | HighIntensity,
 //        LightCyan = DarkCyan | HighIntensity
 
-static FOREGROUND_DARK_BLUE: u16 = 1;
-static FOREGROUND_DARK_GREEN: u16 = 2;
-static FOREGROUND_DARK_RED: u16 = 4;
-static FOREGROUND_GREY: u16 = FOREGROUND_DARK_BLUE | FOREGROUND_DARK_GREEN | FOREGROUND_DARK_RED;
+const FOREGROUND_DARK_BLUE: u16 = 1;
+const FOREGROUND_DARK_GREEN: u16 = 2;
+const FOREGROUND_DARK_RED: u16 = 4;
+const FOREGROUND_GREY: u16 = FOREGROUND_DARK_BLUE | FOREGROUND_DARK_GREEN | FOREGROUND_DARK_RED;
 
 
 #[cfg(target_os = "windows")]

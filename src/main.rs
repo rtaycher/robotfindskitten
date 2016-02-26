@@ -80,11 +80,11 @@ impl Board {
         b.robot_location = new_location;
         let mut ascii_lower: Vec<u8> = ASCII_LOWERCASE_MAP.to_vec();
         {
-            let slice: &mut [u8] = ascii_lower.as_mut_slice();
+            let slice: &mut [u8] = &mut ascii_lower[..];
             b.rng.shuffle(slice);
         }
         {
-            let slice: &mut [String] = phrases.as_mut_slice();
+            let slice: &mut [String] = &mut phrases[..];
             b.rng.shuffle(slice);
         }
 
