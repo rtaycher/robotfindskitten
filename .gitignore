@@ -4,5 +4,5 @@ Cargo.lock
 target/*
 target-install/*
 *.rs.bk
-rfk_log.toml
-*.nki
+/rfk_log.toml
+/*.nki
