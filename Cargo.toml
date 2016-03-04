@@ -8,7 +8,7 @@ rand = "0.3"
 rustc-serialize = "0.3"
 log = "0.3"
 log4rs = "0.3"
-clap = "*"
+clap = "2.1"
 
 #newest rev breaks compile
 [target.i686-pc-windows-gnu.dependencies]

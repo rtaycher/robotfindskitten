@@ -6,3 +6,4 @@ target-install/*
 *.rs.bk
 /rfk_log.toml
 /*.nki
+robotfindskitten.zip
