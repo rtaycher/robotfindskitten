@@ -20,6 +20,7 @@ pub struct TextGraphicsContext {
 
 impl TextGraphicsContext {
     pub fn new() -> TextGraphicsContext {
+        setlocale(ncurses::LcCategory::all, "");
         initscr();
         clear();
         noecho();
@@ -112,7 +113,7 @@ pub fn draw_board(b: &Board, ctx: &mut TextGraphicsContext) {
     printw(&*buf);
 
     if b.message.contains(HEART_CH) && has_colors() {
-        attroff(COLOR_PAIR(13));
+        attron(COLOR_PAIR(13));
         mvprintw(1, 0, &b.message);
         attroff(COLOR_PAIR(13));
     } else {
