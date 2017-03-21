@@ -23,10 +23,10 @@ impl TextGraphicsContext {
         initscr();
         clear();
         noecho();
-        nodelay(stdscr, true);
+        nodelay(stdscr(), true);
         curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
         cbreak();
-        keypad(stdscr, true);
+        keypad(stdscr(), true);
 
         // see http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/color.html
         if has_colors() {
@@ -58,7 +58,7 @@ impl TextGraphicsContext {
     pub fn output_size(&self) -> (i16, i16) {
         let mut max_x = 0;
         let mut max_y = 0;
-        getmaxyx(stdscr, &mut max_y, &mut max_x);
+        getmaxyx(stdscr(), &mut max_y, &mut max_x);
         (max_x as i16, max_y as i16)
     }
     pub fn get_rand_non_black_color(&self, rng: &mut ThreadRng) -> u16 {
