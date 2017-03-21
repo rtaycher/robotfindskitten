@@ -25,11 +25,11 @@ use common::UsefulInput::*;
 pub use common::Board;
 
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 extern crate ncurses;
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 pub mod linux_console_gui;
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 use linux_console_gui::{TextGraphicsContext, get_input, draw_board, draw_text};
 
 #[cfg(target_os = "windows")]

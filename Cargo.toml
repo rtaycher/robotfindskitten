@@ -24,10 +24,5 @@ wio = { git = "https://github.com/retep998/wio-rs.git", rev="5a805212faf77b8dd40
 [target.x86_64-pc-windows-msvc.dependencies]
 wio = { git = "https://github.com/retep998/wio-rs.git", rev="5a805212faf77b8dd405e06487ddd58f76930ea1" }
 
-[target.i686-unknown-linux-gnu.dependencies]
+[target.'cfg(unix)'.dependencies]
 ncurses = "5"
-[target.x86-unknown-linux-gnu.dependencies]
-ncurses = "5"
-[target.x86_64-unknown-linux-gnu.dependencies]
-ncurses = "5"
-

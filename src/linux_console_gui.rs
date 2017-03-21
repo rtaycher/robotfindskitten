@@ -12,7 +12,7 @@ extern crate ncurses;
 use ncurses::*;
 use rand::{Rng, ThreadRng};
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 #[allow(dead_code)]
 pub struct TextGraphicsContext {
     dummy: i32,
@@ -73,7 +73,7 @@ impl Drop for TextGraphicsContext {
     }
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 #[allow(unused_variables)]
 pub fn get_input(ctx: &TextGraphicsContext) -> Vec<UsefulInput> {
     let mut res = Vec::new();
@@ -95,7 +95,7 @@ pub fn get_input(ctx: &TextGraphicsContext) -> Vec<UsefulInput> {
     res
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 pub fn draw_board(b: &Board, ctx: &mut TextGraphicsContext) {
     clear();
 
@@ -158,7 +158,7 @@ pub fn draw_board(b: &Board, ctx: &mut TextGraphicsContext) {
     refresh();
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 #[allow(unused_variables)]
 pub fn draw_text(ctx: &mut TextGraphicsContext, text: &str) {
     printw(text);
